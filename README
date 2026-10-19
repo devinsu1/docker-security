@@ -1,0 +1,16 @@
+VulnApp - deliberately vulnerable web app for LOCAL security testing only.
+Never expose it to the internet or a shared network.
+
+  docker build -t vulnapp .
+  docker run --rm -p 127.0.0.1:5000:5000 vulnapp
+
+Then open http://localhost:5000
+
+Vulnerabilities:
+  /login      SQL injection (auth bypass):   username: admin' --
+  /search     SQL injection (UNION):         ' UNION SELECT id,username||':'||password,0 FROM users --
+  /hello      Reflected XSS:                 ?name=<script>alert(1)</script>
+  /guestbook  Stored XSS
+  /ping       Command injection:             ?host=127.0.0.1;id
+  /view       Path traversal:                ?file=../../../../etc/passwd
+Also: hardcoded secret key, verbose SQL errors, runs as root, no CSRF protection.
